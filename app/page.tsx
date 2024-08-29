@@ -12,7 +12,7 @@ export default async function Index() {
     try {
       createClient();
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   };
