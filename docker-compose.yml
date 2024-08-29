@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app # ホストのカレントディレクトリをコンテナの/appにマウント
+      - /app/node_modules # node_modulesを匿名ボリュームとしてマウント
