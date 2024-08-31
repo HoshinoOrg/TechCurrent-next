@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # ポートを指定（Next.js のデフォルトポートは3000）
-EXPOSE 3000
+EXPOSE 3000 3001
 
 # 開発モードでアプリケーションを起動
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev:all"]
