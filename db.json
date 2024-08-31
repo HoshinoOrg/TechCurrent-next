@@ -1,0 +1,61 @@
+{
+  "userCustomDara": {
+    "favorite_tag": ["JavaScript", "Web Development", "Programming"],
+    "favorite_article": [1, 2]
+  },
+  "tag": [
+    { "id": 1, "name": "JavaScript" },
+    { "id": 2, "name": "Web Development" },
+    { "id": 3, "name": "Programming" }
+  ],
+  "article": [
+    {
+      "id": 1,
+      "title": "Introduction to Modern JavaScript",
+      "summary": "A comprehensive guide to understanding the fundamentals and advanced topics of modern JavaScript.",
+      "author": "John Doe",
+      "published_at": "2024-08-30T10:15:00Z",
+      "updated_at": "2024-08-31T14:45:00Z",
+      "category": "JavaScript",
+      "url": "https://example.com/modern-javascript-guide",
+      "thumbnail": "https://example.com/images/js-thumbnail.jpg",
+      "views": 1500,
+      "likes": 120,
+      "comments_count": 15,
+      "source": "Tech Insights",
+      "tags": ["JavaScript", "Web Development", "Programming"]
+    },
+    {
+      "id": 2,
+      "title": "Understanding Docker for DevOps",
+      "summary": "Learn how Docker revolutionizes DevOps practices by simplifying containerization.",
+      "author": "Jane Smith",
+      "published_at": "2024-08-25T09:00:00Z",
+      "updated_at": "2024-08-30T12:00:00Z",
+      "category": "DevOps",
+      "url": "https://example.com/docker-devops-guide",
+      "thumbnail": "https://example.com/images/docker-thumbnail.jpg",
+      "views": 2500,
+      "likes": 200,
+      "comments_count": 25,
+      "source": "DevOps Daily",
+      "tags": ["Docker", "DevOps", "Containers"]
+    },
+    {
+      "id": 3,
+      "title": "Machine Learning Basics with Python",
+      "summary": "An introductory guide to Machine Learning using Python, covering key concepts and libraries.",
+      "author": "Alice Johnson",
+      "published_at": "2024-08-20T14:30:00Z",
+      "updated_at": "2024-08-22T08:30:00Z",
+      "category": "Machine Learning",
+      "url": "https://example.com/ml-python-basics",
+      "thumbnail": "https://example.com/images/ml-thumbnail.jpg",
+      "views": 3200,
+      "likes": 300,
+      "comments_count": 40,
+      "source": "AI Today",
+      "tags": ["Machine Learning", "Python", "AI"]
+    }
+  ]
+}
