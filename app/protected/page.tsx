@@ -1,9 +1,6 @@
-import DeployButton from "@/components/DeployButton";
-import AuthButton from "@/components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
-import FetchDataSteps from "@/components/tutorial/FetchDataSteps";
-import Header from "@/components/Header";
 import { redirect } from "next/navigation";
+import { Article, fetchAllArticles } from "@/service/articleService";
 
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -16,42 +13,108 @@ export default async function ProtectedPage() {
     return redirect("/login");
   }
 
-  return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
-      <div className="w-full">
-        <div className="py-6 font-medium bg-purple-950 text-white text-center">
-          This is a protected page that you can only see as an authenticated
-          user
-        </div>
-        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-          <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-            <DeployButton />
-            <AuthButton />
-          </div>
-        </nav>
-      </div>
+  const articles: Article[] | null = await fetchAllArticles(supabase);
 
-      <div className="flex-1 flex flex-col gap-20 max-w-4xl px-3">
-        <Header />
-        <main className="flex-1 flex flex-col gap-6">
-          <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-          <FetchDataSteps />
+  if (!articles) {
+    return <p>Error fetching articles</p>;
+  }
+
+  console.log("Fetched articles:", articles);
+
+  return (
+    <div className="w-full h-screen">
+      <div className="flex h-full">
+        {/* サイドバー */}
+        <aside className="w-64 bg-gray-800 text-white flex flex-col p-4">
+          <div className="flex items-center justify-center mb-6">
+            <h2 className="text-2xl font-bold">TeckCurrent</h2>
+          </div>
+          <nav className="flex-grow">
+            <ul className="space-y-4">
+              <li>
+                <a href="#" className="hover:text-gray-400">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gray-400">
+                  Profile
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gray-400">
+                  Settings
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gray-400">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+
+        {/* メインコンテンツ */}
+        <main className="flex-grow p-8 bg-gray-100">
+          <h1 className="text-3xl font-bold mb-6 text-black">Main Content</h1>
+          <p className="text-black">
+            This is the main content area where you can add your components or
+            any content.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
         </main>
       </div>
-
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
-        <p>
-          Powered by{" "}
-          <a
-            href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-            target="_blank"
-            className="font-bold hover:underline"
-            rel="noreferrer"
-          >
-            Supabase
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }
+
+// プロパティとして記事データを受け取るコンポーネント
+const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
+  return (
+    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
+      {/* サムネイル画像 */}
+      <img
+        className="w-full h-48 object-cover"
+        src={article.thumbnail}
+        alt={article.title}
+      />
+      <div className="px-6 py-4">
+        {/* タイトル */}
+        <div className="font-bold text-gray-600 text-xl mb-2">
+          {article.title}
+        </div>
+        {/* 著者と投稿日 */}
+        <p className="text-gray-600 text-sm mb-4">
+          By {article.author} | Published on{" "}
+          {new Date(article.published_at).toLocaleDateString()}
+        </p>
+        {/* 要約 */}
+        <p className="text-gray-700 text-base  mb-4">{article.summary}</p>
+        <span className="text-gray-600 text-sm">
+          {article.article_tag.map((tagEntry) => (
+            <span
+              key={tagEntry.tag.id}
+              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+            >
+              {tagEntry.tag.name}
+            </span>
+          ))}
+        </span>
+      </div>
+      {/* 下部情報 */}
+      <div className="px-6 pt-4 pb-2 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-600 text-sm">
+            source: {article.source.name}
+          </span>
+          <span className="text-gray-600 text-sm">Likes: {article.likes}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
