@@ -1,19 +1,8 @@
 // /app/articles/components/ArticleList.tsx
 "use client";
 
+import { Article } from "@/service/articleService";
 import { useState, useEffect } from "react";
-
-type Article = {
-  id: number;
-  title: string;
-  published_at: string;
-  likes: number;
-  author: string;
-  thumbnail: string;
-  summary: string;
-  article_tag: { tag: { id: number; name: string } }[];
-  source: { name: string };
-};
 
 export default function ArticleList() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -37,9 +26,9 @@ export default function ArticleList() {
   const handleSort = (criteria: "date" | "likes") => {
     const sorted = [...articles].sort((a, b) => {
       if (criteria === "date") {
+        console.log(a.created_at, b.created_at);
         return (
-          new Date(b.published_at).getTime() -
-          new Date(a.published_at).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       } else {
         return b.likes - a.likes;
@@ -58,26 +47,6 @@ export default function ArticleList() {
         </div>
         <nav className="flex-grow">
           <ul className="space-y-4">
-            <li>
-              <a href="#" className="hover:text-gray-400">
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-400">
-                Profile
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-400">
-                Settings
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-400">
-                Logout
-              </a>
-            </li>
             {/* ソート機能の追加 */}
             <li>
               <button onClick={handleSortClick} className="hover:text-gray-400">
@@ -131,7 +100,7 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
         </div>
         <p className="text-gray-600 text-sm mb-4">
           By {article.author} | Published on{" "}
-          {new Date(article.published_at).toLocaleDateString()}
+          {new Date(article.created_at).toLocaleDateString()}
         </p>
         <p className="text-gray-700 text-base mb-4">{article.summary}</p>
         <span className="text-gray-600 text-sm">
