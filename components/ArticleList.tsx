@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 
 export default function ArticleList() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [isSortOpen, setIsSortOpen] = useState(false);
 
   // 記事データの取得
   useEffect(() => {
@@ -18,10 +17,6 @@ export default function ArticleList() {
 
     fetchArticles();
   }, []);
-
-  const handleSortClick = () => {
-    setIsSortOpen(!isSortOpen);
-  };
 
   const handleSort = (criteria: "date" | "likes") => {
     const sorted = [...articles].sort((a, b) => {
@@ -35,7 +30,6 @@ export default function ArticleList() {
       }
     });
     setArticles(sorted);
-    setIsSortOpen(false); // ソートメニューを閉じる
   };
 
   return (
@@ -49,25 +43,21 @@ export default function ArticleList() {
           <ul className="space-y-4">
             {/* ソート機能の追加 */}
             <li>
-              <button onClick={handleSortClick} className="hover:text-gray-400">
-                Sort
-              </button>
-              {isSortOpen && (
-                <div className="mt-2 bg-gray-700 p-2 rounded">
-                  <button
-                    onClick={() => handleSort("date")}
-                    className="block w-full text-left hover:text-gray-300"
-                  >
-                    Date
-                  </button>
-                  <button
-                    onClick={() => handleSort("likes")}
-                    className="block w-full text-left hover:text-gray-300"
-                  >
-                    Likes
-                  </button>
-                </div>
-              )}
+              <h1>Sort</h1>
+              <div className="mt-2 bg-gray-700 p-2 rounded">
+                <button
+                  onClick={() => handleSort("date")}
+                  className="block w-full text-left hover:text-gray-300"
+                >
+                  Date
+                </button>
+                <button
+                  onClick={() => handleSort("likes")}
+                  className="block w-full text-left hover:text-gray-300"
+                >
+                  Likes
+                </button>
+              </div>
             </li>
           </ul>
         </nav>
