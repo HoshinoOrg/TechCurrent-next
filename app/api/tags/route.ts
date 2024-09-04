@@ -1,12 +1,7 @@
 // /app/api/articles/route.ts
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import {
-  Article,
-  Tag,
-  fetchAllArticles,
-  fetchAllTags,
-} from "@/service/articleService"; // 型定義がある場合
+import { Tag, fetchAllTags } from "@/service/articleService"; // 型定義がある場合
 
 // Supabaseクライアントの初期化
 
