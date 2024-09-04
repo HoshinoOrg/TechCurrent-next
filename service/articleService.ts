@@ -15,16 +15,11 @@ export interface Article {
   title: string;
   summary: string;
   author: string;
-  published_at: string;
-  updated_at: string;
-  category: string;
+  created_at: string;
   url: string;
   thumbnail: string;
-  views: number;
   likes: number;
-  comments_count: number;
   source: { id: number; name: string };
-  tags: string[];
   article_tag: ArticleTag[];
 }
 
@@ -50,6 +45,6 @@ export const fetchAllArticles = async (
     console.error("Error fetching articles:", error.message);
     return null;
   }
-
+  console.log(articles[0].created_at);
   return articles;
 };

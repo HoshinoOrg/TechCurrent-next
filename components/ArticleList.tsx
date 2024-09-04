@@ -1,0 +1,117 @@
+// /app/articles/components/ArticleList.tsx
+"use client";
+
+import { Article } from "@/service/articleService";
+import { useState, useEffect } from "react";
+
+export default function ArticleList() {
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  // 記事データの取得
+  useEffect(() => {
+    const fetchArticles = async () => {
+      const response = await fetch("/api/articles"); // APIから記事データを取得
+      const data = await response.json();
+      setArticles(data);
+    };
+
+    fetchArticles();
+  }, []);
+
+  const handleSort = (criteria: "date" | "likes") => {
+    const sorted = [...articles].sort((a, b) => {
+      if (criteria === "date") {
+        console.log(a.created_at, b.created_at);
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      } else {
+        return b.likes - a.likes;
+      }
+    });
+    setArticles(sorted);
+  };
+
+  return (
+    <div className="flex h-full">
+      {/* サイドバー */}
+      <aside className="w-64 bg-gray-800 text-white flex flex-col p-4">
+        <div className="flex items-center justify-center mb-6">
+          <h2 className="text-2xl font-bold">TeckCurrent</h2>
+        </div>
+        <nav className="flex-grow">
+          <ul className="space-y-4">
+            {/* ソート機能の追加 */}
+            <li>
+              <h1>Sort</h1>
+              <div className="mt-2 bg-gray-700 p-2 rounded">
+                <button
+                  onClick={() => handleSort("date")}
+                  className="block w-full text-left hover:text-gray-300"
+                >
+                  Date
+                </button>
+                <button
+                  onClick={() => handleSort("likes")}
+                  className="block w-full text-left hover:text-gray-300"
+                >
+                  Likes
+                </button>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* メインコンテンツ */}
+      <main className="flex-grow p-8 bg-gray-100">
+        <h1 className="text-3xl font-bold mb-6 text-black">Main Content</h1>
+        <div className="flex flex-wrap gap-4">
+          {articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
+  return (
+    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
+      <img
+        className="w-full h-48 object-cover"
+        src={article.thumbnail}
+        alt={article.title}
+      />
+      <div className="px-6 py-4">
+        <div className="font-bold text-gray-600 text-xl mb-2">
+          {article.title}
+        </div>
+        <p className="text-gray-600 text-sm mb-4">
+          By {article.author} | Published on{" "}
+          {new Date(article.created_at).toLocaleDateString()}
+        </p>
+        <p className="text-gray-700 text-base mb-4">{article.summary}</p>
+        <span className="text-gray-600 text-sm">
+          {article.article_tag.map((tagEntry) => (
+            <span
+              key={tagEntry.tag.id}
+              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+            >
+              {tagEntry.tag.name}
+            </span>
+          ))}
+        </span>
+      </div>
+      <div className="px-6 pt-4 pb-2 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-600 text-sm">
+            source: {article.source.name}
+          </span>
+          <span className="text-gray-600 text-sm">Likes: {article.likes}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
