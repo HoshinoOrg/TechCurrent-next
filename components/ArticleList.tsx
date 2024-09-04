@@ -71,6 +71,12 @@ export default function ArticleList() {
     }
   };
 
+  const handlerTagClear = () => {
+    const newSelectedTags = new Set<number>();
+    setSelectedTags(newSelectedTags);
+    filterArticlesByTags(newSelectedTags);
+  };
+
   return (
     <div className="flex h-screen">
       {/* サイドバー */}
@@ -99,7 +105,16 @@ export default function ArticleList() {
               </div>
             </li>
             <li>
-              <h3 className="text-lg font-semibold">Filter by Tags</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Filter by Tags</h3>
+                <button
+                  onClick={handlerTagClear}
+                  className="text-left hover:text-gray-300"
+                >
+                  クリア
+                </button>
+              </div>
+
               {tags.map((tag) => (
                 <div key={tag.id} className="flex items-center">
                   <input
