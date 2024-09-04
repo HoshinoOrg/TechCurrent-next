@@ -48,3 +48,17 @@ export const fetchAllArticles = async (
   console.log(articles[0].created_at);
   return articles;
 };
+
+// タグを取得する関数
+export const fetchAllTags = async (
+  supabase: SupabaseClient
+): Promise<Tag[] | null> => {
+  const { data: tags, error } = await supabase.from("tag").select("*");
+
+  if (error) {
+    console.error("Error fetching tags:", error.message);
+    return null;
+  }
+  console.log("tag", tags);
+  return tags;
+};
