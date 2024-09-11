@@ -53,7 +53,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
       <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground [&>input]:mb-6 max-w-md p-4">
         <h1 className="text-2xl font-medium">Log in</h1>
         <p className="text-sm text-foreground/60">
-          Don't have an account?{" "}
+          アカウント持ってない?{" "}
           <Link className="text-blue-600 font-medium underline" href="/signup">
             Sign up
           </Link>
