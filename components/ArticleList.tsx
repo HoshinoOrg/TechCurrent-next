@@ -80,7 +80,7 @@ export default function ArticleList() {
   return (
     <div className="flex h-screen">
       {/* サイドバー */}
-      <aside className="w-64 bg-gray-800 text-white flex flex-col p-4 overflow-y-auto">
+      <aside className="w-64 bg-gray-800 text-white flex flex-col p-4 overflow-y-auto flex-shrink-0">
         <div className="flex items-center justify-center mb-6">
           <h2 className="text-2xl font-bold">TeckCurrent</h2>
         </div>
@@ -154,11 +154,6 @@ const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
       <a href={article.url} target="_blank" rel="noreferrer">
-        <img
-          className="w-full h-48 object-cover"
-          src={article.thumbnail}
-          alt={article.title}
-        />
         <div className="px-6 py-4">
           <div className="font-bold text-gray-600 text-xl mb-2">
             {article.title}
