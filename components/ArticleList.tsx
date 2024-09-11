@@ -31,7 +31,7 @@ export default function ArticleList() {
   }, []);
 
   const handleSort = (criteria: "date" | "likes") => {
-    const sorted = [...articles].sort((a, b) => {
+    const sorted = [...filteredArticles].sort((a, b) => {
       if (criteria === "date") {
         console.log(a.created_at, b.created_at);
         return (
@@ -41,7 +41,7 @@ export default function ArticleList() {
         return b.likes - a.likes;
       }
     });
-    setArticles(sorted);
+    setFilteredArticles(sorted);
   };
 
   // タグが選択されたときのハンドラー
@@ -152,7 +152,7 @@ export default function ArticleList() {
 
 const ArticleCard: React.FC<{ article: Article }> = ({ article }) => {
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
+    <div className="w-80 h-50 rounded overflow-hidden shadow-lg bg-white m-4">
       <a href={article.url} target="_blank" rel="noreferrer">
         <div className="px-6 py-4">
           <div className="font-bold text-gray-600 text-xl mb-2">
