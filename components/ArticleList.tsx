@@ -1,14 +1,18 @@
 // /app/articles/components/ArticleList.tsx
 "use client";
 
-import { Article, Tag } from "@/service/articleService";
+import { Article, Source, Tag } from "@/service/articleService";
 import { useState, useEffect } from "react";
 
 export default function ArticleList() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
   const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
+  const [selectedSources, setSelectedSources] = useState<Set<number>>(
+    new Set()
+  );
 
   // 記事データの取得
   useEffect(() => {
@@ -25,9 +29,16 @@ export default function ArticleList() {
       console.log(data);
       setTags(data);
     };
+    const fetchSources = async () => {
+      const response = await fetch("/api/sources"); // APIから記事データを取得
+      const data = await response.json();
+      console.log(data);
+      setSources(data);
+    };
 
     fetchArticles();
     fetchTags();
+    fetchSources();
   }, []);
 
   const handleSort = (criteria: "date" | "likes") => {
@@ -44,7 +55,31 @@ export default function ArticleList() {
     setFilteredArticles(sorted);
   };
 
+  const handlerTagClear = () => {
+    const newSelectedTags = new Set<number>();
+    setSelectedTags(newSelectedTags);
+    filterArticlesBySourceAndTag(selectedSources, newSelectedTags);
+  };
+  const handlerSourceClear = () => {
+    const newSelectedSource = new Set<number>();
+    setSelectedSources(newSelectedSource);
+    filterArticlesBySourceAndTag(newSelectedSource, selectedTags);
+  };
+
   // タグが選択されたときのハンドラー
+  // ソースの選択/解除ハンドラ
+  const handleSourceChange = (sourceId: number) => {
+    const newSelectedSources = new Set(selectedSources);
+    if (newSelectedSources.has(sourceId)) {
+      newSelectedSources.delete(sourceId); // 選択解除
+    } else {
+      newSelectedSources.add(sourceId); // 選択
+    }
+    setSelectedSources(newSelectedSources);
+    filterArticlesBySourceAndTag(newSelectedSources, selectedTags);
+  };
+
+  // タグの選択/解除ハンドラ
   const handleTagChange = (tagId: number) => {
     const newSelectedTags = new Set(selectedTags);
     if (newSelectedTags.has(tagId)) {
@@ -53,28 +88,30 @@ export default function ArticleList() {
       newSelectedTags.add(tagId); // 選択
     }
     setSelectedTags(newSelectedTags);
-
-    filterArticlesByTags(newSelectedTags);
+    filterArticlesBySourceAndTag(selectedSources, newSelectedTags);
   };
 
-  // タグによって記事をフィルタリングする関数
-  const filterArticlesByTags = (selectedTags: Set<number>) => {
-    if (selectedTags.size === 0) {
-      setFilteredArticles(articles); // タグが選択されていない場合、全記事を表示
+  // ソースとタグによって記事をフィルタリングする関数
+  const filterArticlesBySourceAndTag = (
+    selectedSources: Set<number>,
+    selectedTags: Set<number>
+  ) => {
+    if (selectedSources.size === 0 && selectedTags.size === 0) {
+      setFilteredArticles(articles); // ソースもタグも選択されていない場合、全記事を表示
     } else {
-      const filtered = articles.filter((article) =>
-        article.article_tag.some((tagEntry) =>
-          selectedTags.has(tagEntry.tag.id)
-        )
-      );
+      const filtered = articles.filter((article) => {
+        const matchesSource =
+          selectedSources.size === 0 || selectedSources.has(article.source.id);
+
+        const matchesTag =
+          selectedTags.size === 0 ||
+          article.article_tag.some((tag) => selectedTags.has(tag.tag.id));
+
+        return matchesSource && matchesTag;
+      });
+
       setFilteredArticles(filtered);
     }
-  };
-
-  const handlerTagClear = () => {
-    const newSelectedTags = new Set<number>();
-    setSelectedTags(newSelectedTags);
-    filterArticlesByTags(newSelectedTags);
   };
 
   return (
@@ -102,6 +139,36 @@ export default function ArticleList() {
                 >
                   Likes
                 </button>
+              </div>
+            </li>
+            <li>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Filter by Sources</h3>
+                <button
+                  onClick={handlerSourceClear}
+                  className="text-left hover:text-gray-300"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="mt-2 bg-gray-700 p-2 rounded">
+                {sources.map((source) => (
+                  <div key={source.id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`source-${source.id}`}
+                      checked={selectedSources.has(source.id)}
+                      onChange={() => handleSourceChange(source.id)}
+                      className="mr-2"
+                    />
+                    <label
+                      htmlFor={`source-${source.id}`}
+                      className="hover:text-gray-400"
+                    >
+                      {source.name}
+                    </label>
+                  </div>
+                ))}
               </div>
             </li>
             <li>
