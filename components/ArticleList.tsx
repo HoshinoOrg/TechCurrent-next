@@ -55,20 +55,6 @@ export default function ArticleList() {
     setFilteredArticles(sorted);
   };
 
-  // タグによって記事をフィルタリングする関数
-  const filterArticlesByTags = (selectedTags: Set<number>) => {
-    if (selectedTags.size === 0) {
-      setFilteredArticles(articles); // タグが選択されていない場合、全記事を表示
-    } else {
-      const filtered = articles.filter((article) =>
-        article.article_tag.some((tagEntry) =>
-          selectedTags.has(tagEntry.tag.id)
-        )
-      );
-      setFilteredArticles(filtered);
-    }
-  };
-
   const handlerTagClear = () => {
     const newSelectedTags = new Set<number>();
     setSelectedTags(newSelectedTags);
