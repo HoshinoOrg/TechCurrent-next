@@ -82,7 +82,7 @@ export default function ArticleList() {
       {/* サイドバー */}
       <aside className="w-64 bg-gray-800 text-white flex flex-col p-4 overflow-y-auto flex-shrink-0">
         <div className="flex items-center justify-center mb-6">
-          <h2 className="text-2xl font-bold">TeckCurrent</h2>
+          <h2 className="text-2xl font-bold">TechCurrent</h2>
         </div>
         <nav className="flex-grow">
           <ul className="space-y-4">
@@ -111,7 +111,7 @@ export default function ArticleList() {
                   onClick={handlerTagClear}
                   className="text-left hover:text-gray-300"
                 >
-                  クリア
+                  Clear
                 </button>
               </div>
 
