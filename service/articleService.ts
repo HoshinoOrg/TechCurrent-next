@@ -19,8 +19,13 @@ export interface Article {
   url: string;
   thumbnail: string;
   likes: number;
-  source: { id: number; name: string };
+  source: Source;
   article_tag: ArticleTag[];
+}
+
+export interface Source {
+  id: number;
+  name: string;
 }
 
 // 記事を取得する関数
@@ -66,4 +71,18 @@ export const fetchAllTags = async (
   }
   console.log("tag", tags);
   return tags;
+};
+
+// タグを取得する関数
+export const fetchAllSources = async (
+  supabase: SupabaseClient
+): Promise<Source[] | null> => {
+  const { data: sources, error } = await supabase.from("source").select("*");
+
+  if (error) {
+    console.error("Error fetching sources:", error.message);
+    return null;
+  }
+  console.log("sources", sources);
+  return sources;
 };
