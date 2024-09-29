@@ -27,7 +27,10 @@ export interface Article {
 export const fetchAllArticles = async (
   supabase: SupabaseClient
 ): Promise<Article[] | null> => {
-  const { data: articles, error } = await supabase.from("article").select(`
+  const { data: articles, error } = await supabase
+    .from("article")
+    .select(
+      `
   *,
   article_tag (
     tag (
@@ -39,7 +42,9 @@ export const fetchAllArticles = async (
     id,
     name
   )
-`);
+`
+    )
+    .order("id", { ascending: false });
 
   if (error) {
     console.error("Error fetching articles:", error.message);
